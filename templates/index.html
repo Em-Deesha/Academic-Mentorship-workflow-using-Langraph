@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Mentorship Workflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Header -->
+        <header class="main-header">
+            <h1>🎓 Academic Mentorship Workflow</h1>
+            <p>AI-powered academic guidance through sequential agent collaboration</p>
+        </header>
+
+        <!-- Workflow Selection -->
+        <div class="workflow-selector">
+            <button class="workflow-btn active" onclick="switchWorkflow('openai')">
+                <span class="btn-icon">🤖</span>
+                <span>OpenAI Workflow</span>
+            </button>
+            <button class="workflow-btn" onclick="switchWorkflow('gemini')">
+                <span class="btn-icon">🧠</span>
+                <span>Gemini Workflow</span>
+            </button>
+        </div>
+
+        <!-- Input Form -->
+        <div class="input-section">
+            <div class="form-container">
+                <form id="workflow-form">
+                    <div class="form-group">
+                        <label for="user-request">Your Academic Request</label>
+                        <textarea id="user-request" name="user_input" placeholder="e.g., Analyze this paper and recommend courses for machine learning research" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="model-select">Model</label>
+                        <select id="model-select" name="model">
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            <option value="gpt-4">GPT-4</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Run Workflow</span>
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="results-section" style="display: none;">
+            <!-- Research Scope Card -->
+            <div class="result-card" data-section="research_scope">
+                <div class="card-header" onclick="toggleCard('research_scope')">
+                    <div class="card-title">
+                        <span class="card-icon">🎯</span>
+                        <h3>Research Scope</h3>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-text" id="research_scope_content"></div>
+                </div>
+            </div>
+
+            <!-- Analyst Report Card -->
+            <div class="result-card" data-section="analyst_report">
+                <div class="card-header" onclick="toggleCard('analyst_report')">
+                    <div class="card-title">
+                        <span class="card-icon">📊</span>
+                        <h3>Analyst Report</h3>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-text" id="analyst_report_content"></div>
+                </div>
+            </div>
+
+            <!-- Resource Map Card -->
+            <div class="result-card" data-section="resource_map">
+                <div class="card-header" onclick="toggleCard('resource_map')">
+                    <div class="card-title">
+                        <span class="card-icon">📚</span>
+                        <h3>Resource Map</h3>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-text" id="resource_map_content"></div>
+                </div>
+            </div>
+
+            <!-- Final Report Card -->
+            <div class="result-card" data-section="final_report">
+                <div class="card-header" onclick="toggleCard('final_report')">
+                    <div class="card-title">
+                        <span class="card-icon">📋</span>
+                        <h3>Final Report</h3>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-text" id="final_report_content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Processing your request through the mentorship pipeline...</p>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div id="error" class="error-overlay" style="display: none;">
+            <div class="error-content">
+                <h3>⚠️ Error</h3>
+                <p id="error-message"></p>
+                <button onclick="hideError()" class="error-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
