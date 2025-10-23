@@ -1,21 +1,9 @@
 // Global variables
-let currentWorkflow = 'openai';
-const modelOptions = {
-    openai: [
-        { value: 'gpt-4o-mini', text: 'GPT-4o Mini' },
-        { value: 'gpt-4', text: 'GPT-4' },
-        { value: 'gpt-3.5-turbo', text: 'GPT-3.5 Turbo' }
-    ],
-    gemini: [
-        { value: 'gemini-2.0-flash', text: 'Gemini 2.0 Flash' },
-        { value: 'gemini-2.5-flash', text: 'Gemini 2.5 Flash' },
-        { value: 'gemini-2.5-pro', text: 'Gemini 2.5 Pro' }
-    ]
-};
+let currentTool = 'research-hub';
 
-// Workflow switching functionality
-function switchWorkflow(workflow) {
-    currentWorkflow = workflow;
+// Tool switching functionality
+function switchTool(tool) {
+    currentTool = tool;
     
     // Update active button
     document.querySelectorAll('.workflow-btn').forEach(btn => {
@@ -23,25 +11,19 @@ function switchWorkflow(workflow) {
     });
     event.target.closest('.workflow-btn').classList.add('active');
     
-    // Update model options
-    updateModelOptions(workflow);
+    // Show/hide appropriate sections
+    if (tool === 'research-hub') {
+        document.getElementById('research-hub-section').style.display = 'block';
+        document.getElementById('mentorship-section').style.display = 'none';
+    } else {
+        document.getElementById('research-hub-section').style.display = 'none';
+        document.getElementById('mentorship-section').style.display = 'block';
+    }
     
     // Clear previous results
     clearResults();
 }
 
-// Update model options based on selected workflow
-function updateModelOptions(workflow) {
-    const modelSelect = document.getElementById('model-select');
-    modelSelect.innerHTML = '';
-    
-    modelOptions[workflow].forEach(option => {
-        const optionElement = document.createElement('option');
-        optionElement.value = option.value;
-        optionElement.textContent = option.text;
-        modelSelect.appendChild(optionElement);
-    });
-}
 
 // Clear results and errors
 function clearResults() {
@@ -51,11 +33,9 @@ function clearResults() {
     // Reset all cards to collapsed state
     document.querySelectorAll('.result-card').forEach(card => {
         const content = card.querySelector('.card-content');
-        const icon = card.querySelector('.card-icon');
         const expandIcon = card.querySelector('.expand-icon');
         
         content.classList.remove('expanded');
-        icon.style.transform = 'rotate(0deg)';
         expandIcon.style.transform = 'rotate(0deg)';
     });
 }
@@ -86,24 +66,46 @@ function hideError() {
 function toggleCard(section) {
     const card = document.querySelector(`[data-section="${section}"]`);
     const content = card.querySelector('.card-content');
-    const icon = card.querySelector('.card-icon');
     const expandIcon = card.querySelector('.expand-icon');
     
     const isExpanded = content.classList.contains('expanded');
     
     if (isExpanded) {
         content.classList.remove('expanded');
-        icon.style.transform = 'rotate(0deg)';
         expandIcon.style.transform = 'rotate(0deg)';
     } else {
         content.classList.add('expanded');
-        icon.style.transform = 'rotate(180deg)';
         expandIcon.style.transform = 'rotate(180deg)';
     }
 }
 
-// Display workflow results
-function displayResults(data) {
+// Display paper analysis results
+function displayPaperResults(data) {
+    // Populate each card with content
+    const sections = [
+        { key: 'summary', id: 'summary_content' },
+        { key: 'key_concepts', id: 'key_concepts_content' },
+        { key: 'related_resources', id: 'related_resources_content' },
+        { key: 'professor_suggestions', id: 'professor_suggestions_content' }
+    ];
+    
+    sections.forEach(section => {
+        const element = document.getElementById(section.id);
+        if (element && data[section.key]) {
+            element.innerHTML = formatTextContent(data[section.key], section.key);
+        }
+    });
+    
+    // Show paper analysis results
+    document.getElementById('paper-analysis-results').style.display = 'block';
+    document.getElementById('mentorship-results').style.display = 'none';
+    
+    // Show results section with animation
+    showResultsSection();
+}
+
+// Display mentorship results
+function displayMentorshipResults(data) {
     // Populate each card with content
     const sections = [
         { key: 'research_scope', id: 'research_scope_content' },
@@ -119,7 +121,16 @@ function displayResults(data) {
         }
     });
     
+    // Show mentorship results
+    document.getElementById('paper-analysis-results').style.display = 'none';
+    document.getElementById('mentorship-results').style.display = 'block';
+    
     // Show results section with animation
+    showResultsSection();
+}
+
+// Show results section with animation
+function showResultsSection() {
     const resultsSection = document.getElementById('results');
     resultsSection.style.display = 'flex';
     resultsSection.style.opacity = '0';
@@ -135,9 +146,9 @@ function displayResults(data) {
     hideLoading();
 }
 
-// Handle form submission
-async function handleSubmit() {
-    const form = document.getElementById('workflow-form');
+// Handle paper upload form submission
+async function handlePaperUpload() {
+    const form = document.getElementById('paper-upload-form');
     const formData = new FormData(form);
     
     // Show loading
@@ -145,8 +156,7 @@ async function handleSubmit() {
     clearResults();
     
     try {
-        const endpoint = currentWorkflow === 'openai' ? '/api/run-openai' : '/api/run-gemini';
-        const response = await fetch(endpoint, {
+        const response = await fetch('/api/analyze-paper', {
             method: 'POST',
             body: formData
         });
@@ -157,7 +167,37 @@ async function handleSubmit() {
         }
         
         const data = await response.json();
-        displayResults(data);
+        displayPaperResults(data);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showError(`Failed to analyze paper: ${error.message}`);
+    }
+}
+
+// Handle mentorship form submission
+async function handleMentorshipSubmit() {
+    const form = document.getElementById('workflow-form');
+    const formData = new FormData(form);
+    
+    // Show loading
+    showLoading();
+    clearResults();
+    
+    try {
+        // Use Gemini mentorship endpoint
+        const response = await fetch('/api/run-gemini-mentorship', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        displayMentorshipResults(data);
         
     } catch (error) {
         console.error('Error:', error);
@@ -169,7 +209,7 @@ async function handleSubmit() {
 function formatTextContent(text, section) {
     if (!text) return '';
     
-    // Special formatting for Resource Map (Agent 3)
+    // Special formatting for Resource Map (mentorship)
     if (section === 'resource_map') {
         return formatResourceMap(text);
     }
@@ -292,14 +332,27 @@ function formatResourceMap(text) {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize with OpenAI workflow
-    updateModelOptions('openai');
+    // Initialize with research hub tool
+    document.getElementById('research-hub-section').style.display = 'block';
+    document.getElementById('mentorship-section').style.display = 'none';
     
-    // Form submission
-    document.getElementById('workflow-form').addEventListener('submit', function(e) {
+    // Paper upload form submission
+    const paperForm = document.getElementById('paper-upload-form');
+    if (paperForm) {
+        paperForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handlePaperUpload();
+        });
+    }
+    
+    // Mentorship form submission
+    const mentorshipForm = document.getElementById('workflow-form');
+    if (mentorshipForm) {
+        mentorshipForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        handleSubmit();
+            handleMentorshipSubmit();
     });
+    }
     
     // Add smooth scrolling for better UX
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

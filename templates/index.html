@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Mentorship Workflow</title>
+    <title>Multi-Tool Research Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,36 +13,59 @@
     <div class="app-container">
         <!-- Main Header -->
         <header class="main-header">
-            <h1>🎓 Academic Mentorship Workflow</h1>
-            <p>AI-powered academic guidance through sequential agent collaboration</p>
+            <h1>🔬 Multi-Tool Research Hub</h1>
+            <p>AI-powered paper analysis with automatic summarization, concept extraction, and resource suggestions</p>
         </header>
 
-        <!-- Workflow Selection -->
+        <!-- Tool Selection -->
         <div class="workflow-selector">
-            <button class="workflow-btn active" onclick="switchWorkflow('openai')">
-                <span class="btn-icon">🤖</span>
-                <span>OpenAI Workflow</span>
+            <button class="workflow-btn active" onclick="switchTool('research-hub')">
+                <span class="btn-icon">📄</span>
+                <span>Paper Analysis</span>
             </button>
-            <button class="workflow-btn" onclick="switchWorkflow('gemini')">
-                <span class="btn-icon">🧠</span>
-                <span>Gemini Workflow</span>
+            <button class="workflow-btn" onclick="switchTool('mentorship')">
+                <span class="btn-icon">🎓</span>
+                <span>Academic Mentorship</span>
             </button>
         </div>
 
-        <!-- Input Form -->
-        <div class="input-section">
+        <!-- Research Hub Interface -->
+        <div id="research-hub-section" class="input-section">
             <div class="form-container">
+                <h3>📄 Upload Research Paper</h3>
+                <p>Upload a PDF, DOCX, or TXT file to get AI-powered analysis including summarization, key concepts, resources, and professor suggestions.</p>
+                
+                <form id="paper-upload-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="paper-file">Select Research Paper</label>
+                        <input type="file" id="paper-file" name="file" accept=".pdf,.docx,.doc,.txt" required>
+                        <small>Supported formats: PDF, DOCX, DOC, TXT (Max 16MB)</small>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Analyze Paper</span>
+                        <span class="btn-icon">🔍</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mentorship Interface (Hidden by default) -->
+        <div id="mentorship-section" class="input-section" style="display: none;">
+            <div class="form-container">
+                <h3>🎓 Academic Mentorship Workflow</h3>
+                <p>Get comprehensive academic guidance through AI agent collaboration.</p>
+                
                 <form id="workflow-form">
                     <div class="form-group">
                         <label for="user-request">Your Academic Request</label>
-                        <textarea id="user-request" name="user_input" placeholder="e.g., Analyze this paper and recommend courses for machine learning research" required></textarea>
+                        <textarea id="user-request" name="user_input" placeholder="e.g., I want to research machine learning in healthcare" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="model-select">Model</label>
+                        <label for="model-select">Gemini Model</label>
                         <select id="model-select" name="model">
-                            <option value="gpt-4o-mini">GPT-4o Mini</option>
-                            <option value="gpt-4">GPT-4</option>
-                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                            <option value="gemini-2.0-flash">Gemini 2.0 Flash (Fast)</option>
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Enhanced)</option>
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro (Best Quality)</option>
                         </select>
                     </div>
                     <button type="submit" class="submit-btn">
@@ -55,59 +78,121 @@
 
         <!-- Results Section -->
         <div id="results" class="results-section" style="display: none;">
-            <!-- Research Scope Card -->
-            <div class="result-card" data-section="research_scope">
-                <div class="card-header" onclick="toggleCard('research_scope')">
-                    <div class="card-title">
-                        <span class="card-icon">🎯</span>
-                        <h3>Research Scope</h3>
+            <!-- Paper Analysis Results -->
+            <div id="paper-analysis-results" style="display: none;">
+                <!-- Paper Summary Card -->
+                <div class="result-card" data-section="summary">
+                    <div class="card-header" onclick="toggleCard('summary')">
+                        <div class="card-title">
+                            <span class="card-icon">📄</span>
+                            <h3>Paper Summary</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
                     </div>
-                    <span class="expand-icon">▼</span>
+                    <div class="card-content">
+                        <div class="card-text" id="summary_content"></div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <div class="card-text" id="research_scope_content"></div>
+
+                <!-- Key Concepts Card -->
+                <div class="result-card" data-section="key_concepts">
+                    <div class="card-header" onclick="toggleCard('key_concepts')">
+                        <div class="card-title">
+                            <span class="card-icon">🧠</span>
+                            <h3>Key Concepts</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-text" id="key_concepts_content"></div>
+                    </div>
+                </div>
+
+                <!-- Related Resources Card -->
+                <div class="result-card" data-section="related_resources">
+                    <div class="card-header" onclick="toggleCard('related_resources')">
+                        <div class="card-title">
+                            <span class="card-icon">📚</span>
+                            <h3>Related Resources</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-text" id="related_resources_content"></div>
+                    </div>
+                </div>
+
+                <!-- Professor Suggestions Card -->
+                <div class="result-card" data-section="professor_suggestions">
+                    <div class="card-header" onclick="toggleCard('professor_suggestions')">
+                        <div class="card-title">
+                            <span class="card-icon">👨‍🏫</span>
+                            <h3>Professor Suggestions</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-text" id="professor_suggestions_content"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Analyst Report Card -->
-            <div class="result-card" data-section="analyst_report">
-                <div class="card-header" onclick="toggleCard('analyst_report')">
-                    <div class="card-title">
-                        <span class="card-icon">📊</span>
-                        <h3>Analyst Report</h3>
+            <!-- Mentorship Results -->
+            <div id="mentorship-results" style="display: none;">
+                <!-- Research Scope Card -->
+                <div class="result-card" data-section="research_scope">
+                    <div class="card-header" onclick="toggleCard('research_scope')">
+                        <div class="card-title">
+                            <span class="card-icon">🎯</span>
+                            <h3>Research Scope</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
                     </div>
-                    <span class="expand-icon">▼</span>
+                    <div class="card-content">
+                        <div class="card-text" id="research_scope_content"></div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <div class="card-text" id="analyst_report_content"></div>
-                </div>
-            </div>
 
-            <!-- Resource Map Card -->
-            <div class="result-card" data-section="resource_map">
-                <div class="card-header" onclick="toggleCard('resource_map')">
-                    <div class="card-title">
-                        <span class="card-icon">📚</span>
-                        <h3>Resource Map</h3>
+                <!-- Analyst Report Card -->
+                <div class="result-card" data-section="analyst_report">
+                    <div class="card-header" onclick="toggleCard('analyst_report')">
+                        <div class="card-title">
+                            <span class="card-icon">📊</span>
+                            <h3>Analyst Report</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
                     </div>
-                    <span class="expand-icon">▼</span>
+                    <div class="card-content">
+                        <div class="card-text" id="analyst_report_content"></div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <div class="card-text" id="resource_map_content"></div>
-                </div>
-            </div>
 
-            <!-- Final Report Card -->
-            <div class="result-card" data-section="final_report">
-                <div class="card-header" onclick="toggleCard('final_report')">
-                    <div class="card-title">
-                        <span class="card-icon">📋</span>
-                        <h3>Final Report</h3>
+                <!-- Resource Map Card -->
+                <div class="result-card" data-section="resource_map">
+                    <div class="card-header" onclick="toggleCard('resource_map')">
+                        <div class="card-title">
+                            <span class="card-icon">📚</span>
+                            <h3>Resource Map</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
                     </div>
-                    <span class="expand-icon">▼</span>
+                    <div class="card-content">
+                        <div class="card-text" id="resource_map_content"></div>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <div class="card-text" id="final_report_content"></div>
+
+                <!-- Final Report Card -->
+                <div class="result-card" data-section="final_report">
+                    <div class="card-header" onclick="toggleCard('final_report')">
+                        <div class="card-title">
+                            <span class="card-icon">📋</span>
+                            <h3>Final Report</h3>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-text" id="final_report_content"></div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -538,3 +538,58 @@ body {
         padding: 1rem;
     }
 }
+
+/* File Upload Styling */
+.form-group input[type="file"] {
+    padding: 0.5rem;
+    background: #1e293b;
+    border: 2px dashed #334155;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: #14b8a6;
+    background: #0f172a;
+}
+
+.form-group input[type="file"]:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* File upload drag and drop styling */
+.file-upload-area {
+    border: 2px dashed #334155;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background: #1e293b;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: #14b8a6;
+    background: #0f172a;
+}
+
+.file-upload-area.dragover {
+    border-color: #14b8a6;
+    background: rgba(20, 184, 166, 0.1);
+}
+
+/* Section headers */
+.input-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+}
+
+.input-section p {
+    color: #94a3b8;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}

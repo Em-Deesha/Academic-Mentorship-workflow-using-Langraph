@@ -45,19 +45,19 @@ def node_mentor_scope(state: GraphState) -> dict:
         [
             (
                 "system",
-                "As a Scoping Agent, create a clear research scope. Keep answers concise and use simple language.\n\n"
+                "You are a helpful learning assistant. Create a SIMPLE, BEGINNER-FRIENDLY learning plan. Use everyday language, not academic jargon.\n\n"
                 "Provide:\n"
-                "1. **Research Question:** One focused question for a semester project\n"
-                "2. **Objectives:** 3-4 clear goals\n"
-                "3. **Scope:** What you will and won't cover\n"
-                "4. **Expected Results:** What you'll deliver\n"
-                "5. **Why Important:** Brief relevance explanation\n\n"
-                "Keep each section short and clear.",
+                "1. **What You'll Learn:** One clear learning goal in simple terms\n"
+                "2. **What You'll Do:** 3-4 practical activities you can actually do\n"
+                "3. **What You'll Need:** Basic tools and resources (free/cheap options)\n"
+                "4. **What You'll Create:** Something concrete you'll build or achieve\n"
+                "5. **Why It Matters:** How this helps you in real life\n\n"
+                "Write like you're talking to a friend who's just starting out. No complex academic language!",
             ),
             (
                 "human",
-                "Topic: \"{user_input}\"\n\n"
-                "Create a research scope:",
+                "I want to learn: \"{user_input}\"\n\n"
+                "Help me create a simple learning plan:",
             ),
         ]
     )
@@ -77,18 +77,18 @@ def node_analyst_quant(state: GraphState) -> dict:
         [
             (
                 "system",
-                "As an Analyst Agent, provide a clear analysis. Keep it concise and simple.\n\n"
+                "You are a practical learning coach. Give SIMPLE, ACTIONABLE advice. Use everyday language.\n\n"
                 "Provide:\n"
-                "1. **Methods:** How you'll approach the research\n"
-                "2. **Key Metrics:** 2-3 measurable goals with target values\n"
-                "3. **Benchmarks:** Baseline (minimum) and stretch (ambitious) goals\n"
-                "4. **Risks:** 3-4 main challenges and how to handle them\n\n"
-                "Keep each section brief and practical.",
+                "1. **How to Start:** Simple first steps anyone can do\n"
+                "2. **How to Track Progress:** Easy ways to see if you're learning\n"
+                "3. **What Success Looks Like:** Clear goals (beginner vs advanced)\n"
+                "4. **Common Problems:** What might go wrong and simple fixes\n\n"
+                "Write like you're helping a friend. No fancy academic terms!",
             ),
             (
                 "human",
-                "Research: \"{research_scope}\"\n\n"
-                "Create an analyst report:",
+                "Learning plan: \"{research_scope}\"\n\n"
+                "Give me practical advice on how to succeed:",
             ),
         ]
     )
@@ -110,19 +110,19 @@ def node_skill_coach(state: GraphState) -> dict:
         [
             (
                 "system",
-                "As a Resource Mapper Agent, create a simple learning plan.\n\n"
-                "Provide 6-8 essential skills needed for this research.\n"
-                "For each skill, give:\n"
-                "- Skill name\n"
-                "- Specific course/book title\n"
-                "- Level: Beginner, Intermediate, or Advanced\n"
-                "- Why it's important (one short sentence)\n\n"
-                "Format as a simple list, not a table. Keep descriptions short.",
+                "You are a helpful learning guide. Give SIMPLE, PRACTICAL resources. Focus on FREE or CHEAP options.\n\n"
+                "Provide 5-6 essential things to learn:\n"
+                "For each one, give:\n"
+                "- What to learn (in simple terms)\n"
+                "- Where to learn it (free websites, YouTube, books under $20)\n"
+                "- How long it takes (realistic time estimates)\n"
+                "- Why it's useful (one simple sentence)\n\n"
+                "Write like you're recommending resources to a friend. No expensive courses!",
             ),
             (
                 "human",
-                "Research: {research_scope}\n\n"
-                "List the essential skills and resources:",
+                "Learning plan: {research_scope}\n\n"
+                "What should I learn and where can I find it for free or cheap?",
             ),
         ]
     )
@@ -147,20 +147,20 @@ def node_lead_mentor_synthesis(state: GraphState) -> dict:
         [
             (
                 "system",
-                "As a Planner Agent, create a simple project plan. Keep it clear and concise.\n\n"
+                "You are a friendly learning buddy. Create a SIMPLE, REALISTIC timeline. Use everyday language.\n\n"
                 "Provide:\n"
-                "1. **Success Criteria:** What defines success (2-3 clear goals)\n"
-                "2. **30-Day Goal:** What to achieve in first month\n"
-                "3. **60-Day Goal:** What to achieve in second month\n"
-                "4. **90-Day Goal:** What to achieve in third month\n\n"
-                "Keep each section short and practical.",
+                "1. **What Success Looks Like:** 2-3 simple things you'll be able to do\n"
+                "2. **First Month:** What to focus on first (start small!)\n"
+                "3. **Second Month:** What to add next\n"
+                "4. **Third Month:** What to master by the end\n\n"
+                "Write like you're planning with a friend. Keep it simple and achievable!",
             ),
             (
                 "human",
-                "Research: {research_scope}\n"
-                "Analysis: {analyst_report}\n"
+                "Learning plan: {research_scope}\n"
+                "Practical advice: {analyst_report}\n"
                 "Resources: {resource_map}\n\n"
-                "Create a project plan:",
+                "Create a simple timeline for me:",
             ),
         ]
     )
