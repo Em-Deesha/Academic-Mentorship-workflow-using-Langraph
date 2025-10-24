@@ -52,7 +52,7 @@ def node_mentor_scope(state: GraphState) -> dict:
                 "3. **What You'll Need:** Basic tools and resources (free/cheap options)\n"
                 "4. **What You'll Create:** Something concrete you'll build or achieve\n"
                 "5. **Why It Matters:** How this helps you in real life\n\n"
-                "Write like you're talking to a friend who's just starting out. No complex academic language!",
+                "Write in easy wording and understandable language. No complex academic language!",
             ),
             (
                 "human",
@@ -83,7 +83,7 @@ def node_analyst_quant(state: GraphState) -> dict:
                 "2. **How to Track Progress:** Easy ways to see if you're learning\n"
                 "3. **What Success Looks Like:** Clear goals (beginner vs advanced)\n"
                 "4. **Common Problems:** What might go wrong and simple fixes\n\n"
-                "Write like you're helping a friend. No fancy academic terms!",
+                "Write in easy wording and understandable language. No complex academic language!",
             ),
             (
                 "human",

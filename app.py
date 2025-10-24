@@ -35,7 +35,6 @@ def run_gemini_mentorship():
     try:
         # Get form data
         user_input = request.form.get('user_input', '').strip()
-        model = request.form.get('model', 'gemini-2.0-flash')
         
         if not user_input:
             return jsonify({'error': 'User input is required'}), 400
@@ -53,7 +52,7 @@ def run_gemini_mentorship():
             'analyst_report': result.get('analyst_report', ''),
             'resource_map': result.get('resource_map', ''),
             'final_report': result.get('final_report', ''),
-            'model_used': model
+            'model_used': 'gemini-2.5-pro'
         })
         
     except Exception as e:
